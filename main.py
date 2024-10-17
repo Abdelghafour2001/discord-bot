@@ -377,6 +377,37 @@ async def on_message(message):
     
     # Process other bot commands normally
     await bot.process_commands(message)
+@bot.command()
+async def unregister(ctx, event_name: str):
+    # Check if the event exists
+    if event_name not in events:
+        await ctx.send("❌ Event not found. Please provide a valid event name.")
+        return
+
+    event = events[event_name]
+    user = ctx.author
+
+    # Check if the user is currently registered for any role
+    current_role = None
+    for role, registered_user in event["roles"].items():
+        if registered_user == user:
+            current_role = role
+            break
+
+    # If the user is not registered for any role
+    if current_role is None:
+        await ctx.send("❌ You are not registered for any role in this event.")
+        return
+
+    # Unregister the user from their role
+    event["roles"][current_role] = None
+
+    # Update the event message to reflect the changes
+    event_message_id = event["message_id"]
+    event_message = await ctx.channel.fetch_message(event_message_id)
+    await event_message.edit(embed=build_event_embed(event_name), view=RoleSelectView(event_name, ctx.guild.me))
+
+    await ctx.send(f"✅ You've successfully unregistered from the event **{event_name}**!")
 
 
 async def send_event_reminder(event_name, channel_id):
