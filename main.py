@@ -405,7 +405,7 @@ async def on_ready():
     check_event_times.start()  # Start the background task
 
 #load_dotenv()
-token=os.getenv("DISCORD_BOT_TOKEN")
+token=os.environ['DISCORD_BOT_TOKEN']
 # Run the bot with your token
 bot.run(token)
 
