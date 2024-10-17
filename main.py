@@ -404,7 +404,7 @@ async def on_ready():
     print(f"Logged in as {bot.user}")
     check_event_times.start()  # Start the background task
 
-load_dotenv()
+#load_dotenv()
 token=os.getenv("DISCORD_BOT_TOKEN")
 # Run the bot with your token
 bot.run(token)
